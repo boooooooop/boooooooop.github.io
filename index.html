@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgb(126, 29, 29); /* Initial background color */
+            font-family: Arial, sans-serif;
+        }
+        #bigButton {
+            width: 80%;
+            height: 80%;
+            background-color: #1e4166;
+            color: rgb(190, 187, 187);
+            font-size: 2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+        }
+        #bigButton:active {
+            background-color: #14294099;
+        }
+        #history {
+            margin-top: 80px;
+            font-size: 1rem;
+            text-align: center;
+            max-width: 90%;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <button id="bigButton"></button>
+    <div id="history"></div>
+
+    <script>
+        const abcount = 3;
+        
+        const bigButton = document.getElementById('bigButton');
+        const body = document.body;
+        const historyDiv = document.getElementById('history');
+
+        const today = new Date().toISOString().split('T')[0];
+
+        let firstVisitDate = localStorage.getItem('firstVisitDate');
+        if (!firstVisitDate) {
+            firstVisitDate = today;
+            localStorage.setItem('firstVisitDate', firstVisitDate);
+        }
+
+        const lastDate = localStorage.getItem('lastDate');
+        let count = parseInt(localStorage.getItem('count'));
+        const backgroundColor = localStorage.getItem('backgroundColor');
+        const buttonVisibility = localStorage.getItem('buttonVisibility');
+        let history = JSON.parse(localStorage.getItem('history')) || {};
+
+        // Reset the counter if the date has changed or count is invalid
+        if (lastDate !== today || isNaN(count)) {
+            if (lastDate) {
+                // Save the previous day's progress to history
+                history[lastDate] = abcount - count;
+                localStorage.setItem('history', JSON.stringify(history));
+            }
+            count = abcount;
+            localStorage.setItem('lastDate', today); // Update the stored date
+            localStorage.setItem('count', count); // Reset the count
+            localStorage.setItem('backgroundColor', 'red'); // Reset background color
+            localStorage.setItem('buttonVisibility', 'block'); // Reset button visibility
+        }
+
+        // Apply the saved UI state
+        body.style.backgroundColor = backgroundColor || 'red';
+        bigButton.style.display = buttonVisibility || 'block';
+        bigButton.textContent = count;
+
+        // Display the history
+        displayHistory();
+
+        bigButton.addEventListener('click', () => {
+            if (count > 0) {
+                count--;
+                bigButton.textContent = count;
+
+                // Save the updated count to localStorage
+                localStorage.setItem('count', count);
+
+                // When count reaches zero, change background to green and hide the button
+                if (count === 0) {
+                    body.style.backgroundColor = 'green';
+                    bigButton.style.display = 'none';
+
+                    // Save today's progress to history
+                    history[today] = abcount;
+                    localStorage.setItem('history', JSON.stringify(history));
+
+                    // Save the updated UI state to localStorage
+                    localStorage.setItem('backgroundColor', 'green');
+                    localStorage.setItem('buttonVisibility', 'none');
+
+                    // Refresh the history display
+                    displayHistory();
+                }
+            }
+        });
+
+        function displayHistory() {
+            let historyHTML = '<h3>Last 30 Days History</h3>';
+            const sortedDates = Object.keys(history).sort((a, b) => new Date(b) - new Date(a));
+            const last30Days = getLast30Days().filter(date => new Date(date) >= new Date(firstVisitDate));
+
+            last30Days.forEach(date => {
+                const clicks = history[date] || 0; // Default to 0 clicks if no data exists
+                historyHTML += `<p>${date}: ${clicks} Clicks</p>`;
+            });
+
+            historyDiv.innerHTML = historyHTML;
+        }
+
+        function getLast30Days() {
+            const dates = [];
+            const today = new Date();
+            for (let i = 0; i < 30; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                dates.push(date.toISOString().split('T')[0]);
+            }
+            return dates;
+        }
+    </script>
+</body>
+</html>
