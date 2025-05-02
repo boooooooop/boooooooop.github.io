@@ -13,13 +13,13 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: rgb(126, 29, 29);
+            background-color: #6a3d3d;
             font-family: Arial, sans-serif;
         }
         #bigButton {
             width: 80%;
             height: 80%;
-            background-color: #1e4166;
+            background-color: #2a394a;
             color: rgb(190, 187, 187);
             font-size: 2rem;
             border: none;
@@ -28,7 +28,7 @@
             text-align: center;
         }
         #bigButton:active {
-            background-color: #14294099;
+            background-color: #19232d99;
         }
         #history {
             margin-top: 80px;
@@ -60,6 +60,9 @@
         const backgroundColor = localStorage.getItem('backgroundColor');
         const buttonVisibility = localStorage.getItem('buttonVisibility');
         let history = JSON.parse(localStorage.getItem('history')) || {};
+        const redbac = '#ff6b6b'; // Softer red
+        const greenbac = '#3f623f'; // Softer green
+
         if (lastDate !== today || isNaN(count)) {
             if (lastDate) {
                 history[lastDate] = abcount - count;
@@ -68,14 +71,14 @@
             count = abcount;
             localStorage.setItem('lastDate', today);
             localStorage.setItem('count', count);
-            localStorage.setItem('backgroundColor', 'red');
+            localStorage.setItem('backgroundColor', redbac);
             localStorage.setItem('buttonVisibility', 'block');
-            body.style.backgroundColor = 'red';
+            body.style.backgroundColor = redbac;
             bigButton.style.display = 'block';
             bigButton.textContent = count;
             historyDiv.style.display = 'none';
         }
-        body.style.backgroundColor = backgroundColor || 'red';
+        body.style.backgroundColor = backgroundColor || redbac;
         bigButton.style.display = buttonVisibility || 'block';
         bigButton.textContent = count;
         if (count === 0) {
@@ -90,11 +93,11 @@
                 bigButton.textContent = count;
                 localStorage.setItem('count', count);
                 if (count === 0) {
-                    body.style.backgroundColor = 'green';
+                    body.style.backgroundColor = greenbac;
                     bigButton.style.display = 'none';
                     history[today] = abcount;
                     localStorage.setItem('history', JSON.stringify(history));
-                    localStorage.setItem('backgroundColor', 'green');
+                    localStorage.setItem('backgroundColor', greenbac);
                     localStorage.setItem('buttonVisibility', 'none');
                     historyDiv.style.display = 'block';
                     displayHistory();
