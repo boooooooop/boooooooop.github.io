@@ -100,12 +100,12 @@
             }
         });
         function displayHistory() {
-            let historyHTML = '<h3>Last 30 Days History</h3>';
+            let historyHTML = '';
             const sortedDates = Object.keys(history).sort((a, b) => new Date(b) - new Date(a));
             const last30Days = getLast30Days().filter(date => new Date(date) >= new Date(firstVisitDate));
             last30Days.forEach(date => {
                 const clicks = history[date] || 0;
-                historyHTML += `<p>${date}: ${clicks} Clicks</p>`;
+                historyHTML += `<p>${date}:   ${clicks}</p>`;
             });
             historyDiv.innerHTML = historyHTML;
         }
