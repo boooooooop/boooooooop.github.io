@@ -82,7 +82,10 @@
             historyDiv.style.display = 'block';
             displayHistory();
         }
-        bigButton.addEventListener('click', () => {
+        bigButton.addEventListener('click', handleButtonPress);
+        bigButton.addEventListener('touchstart', handleButtonPress);
+
+        function handleButtonPress() {
             if (count > 0) {
                 count--;
                 bigButton.textContent = count;
@@ -98,7 +101,8 @@
                     displayHistory();
                 }
             }
-        });
+        }
+
         function displayHistory() {
             let historyHTML = '';
             const sortedDates = Object.keys(history).sort((a, b) => new Date(b) - new Date(a));
