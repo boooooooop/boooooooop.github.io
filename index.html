@@ -36,6 +36,7 @@
             text-align: center;
             max-width: 90%;
             overflow-y: auto;
+            display: none; /* Initially hide the history */
         }
     </style>
 </head>
@@ -83,8 +84,11 @@
         bigButton.style.display = buttonVisibility || 'block';
         bigButton.textContent = count;
 
-        // Display the history
-        displayHistory();
+        // Display the history only if the count is 0
+        if (count === 0) {
+            historyDiv.style.display = 'block';
+            displayHistory();
+        }
 
         bigButton.addEventListener('click', () => {
             if (count > 0) {
@@ -94,7 +98,7 @@
                 // Save the updated count to localStorage
                 localStorage.setItem('count', count);
 
-                // When count reaches zero, change background to green and hide the button
+                // When count reaches zero, change background to green, hide the button, and show history
                 if (count === 0) {
                     body.style.backgroundColor = 'green';
                     bigButton.style.display = 'none';
@@ -107,7 +111,8 @@
                     localStorage.setItem('backgroundColor', 'green');
                     localStorage.setItem('buttonVisibility', 'none');
 
-                    // Refresh the history display
+                    // Show and refresh the history display
+                    historyDiv.style.display = 'block';
                     displayHistory();
                 }
             }
