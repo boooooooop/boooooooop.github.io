@@ -85,7 +85,10 @@
             historyDiv.style.display = 'block';
             displayHistory();
         }
-        bigButton.addEventListener('touchstart', handleButtonPress);
+        bigButton.addEventListener('pointerup', (event) => {
+            event.preventDefault();
+            handleButtonPress();
+        });
 
         function handleButtonPress() {
             if (count > 0) {
@@ -108,13 +111,31 @@
         function displayHistory() {
             let historyHTML = '';
             const sortedDates = Object.keys(history).sort((a, b) => new Date(b) - new Date(a));
-            const last30Days = getLast30Days().filter(date => new Date(date) >= new Date(firstVisitDate));
-            last30Days.forEach(date => {
+            const today = new Date();
+
+            sortedDates.forEach(date => {
                 const clicks = history[date] || 0;
-                historyHTML += `<p>${date}:   ${clicks}</p>`;
+                const dateObj = new Date(date);
+                const diffInTime = today - dateObj;
+                const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24));
+
+                const dayLabel = diffInDays === 0
+                    ? 'today'
+                    : diffInDays === 1
+                    ? '1 day ago'
+                    : `${diffInDays} days ago`;
+
+                historyHTML += `
+                    <div>
+                        <span style="opacity: 0.45;">${dayLabel}</span><br>
+                        ${clicks}<br><br>
+                    </div>
+                `;
             });
+
             historyDiv.innerHTML = historyHTML;
         }
+
         function getLast30Days() {
             const dates = [];
             const today = new Date();
