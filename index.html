@@ -50,12 +50,21 @@
         const body = document.body;
         const historyDiv = document.getElementById('history');
         const today = new Date().toISOString().split('T')[0];
+        const lastDate = localStorage.getItem('lastDate');
+
+        if (lastDate !== today && !localStorage.getItem('refreshHandled')) {
+            localStorage.setItem('refreshHandled', 'true');
+            location.reload();
+        } else {
+            localStorage.removeItem('refreshHandled');
+        }
+
         let firstVisitDate = localStorage.getItem('firstVisitDate');
         if (!firstVisitDate) {
             firstVisitDate = today;
             localStorage.setItem('firstVisitDate', firstVisitDate);
         }
-        const lastDate = localStorage.getItem('lastDate');
+
         let count = parseInt(localStorage.getItem('count'));
         const backgroundColor = localStorage.getItem('backgroundColor');
         const buttonVisibility = localStorage.getItem('buttonVisibility');
@@ -78,13 +87,16 @@
             bigButton.textContent = count;
             historyDiv.style.display = 'none';
         }
+
         body.style.backgroundColor = backgroundColor || redbac;
         bigButton.style.display = buttonVisibility || 'block';
         bigButton.textContent = count;
+
         if (count === 0) {
             historyDiv.style.display = 'block';
             displayHistory();
         }
+
         bigButton.addEventListener('pointerup', (event) => {
             event.preventDefault();
             handleButtonPress();
