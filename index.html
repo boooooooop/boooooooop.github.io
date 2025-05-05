@@ -13,7 +13,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #6a3d3d;
+            background-color: #2a442c;
             font-family: Arial, sans-serif;
         }
         #bigButton {
@@ -60,8 +60,8 @@
         const backgroundColor = localStorage.getItem('backgroundColor');
         const buttonVisibility = localStorage.getItem('buttonVisibility');
         let history = JSON.parse(localStorage.getItem('history')) || {};
-        const redbac = '#ff6b6b'; // Softer red
-        const greenbac = '#3f623f'; // Softer green
+        const redbac = '#442a2a';
+        const greenbac = '#2a442c';
 
         if (lastDate !== today || isNaN(count)) {
             if (lastDate) {
