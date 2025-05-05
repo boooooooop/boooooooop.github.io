@@ -97,9 +97,29 @@
             displayHistory();
         }
 
+        let isPointerMoved = false;
+        let startX = 0;
+        let startY = 0;
+
+        bigButton.addEventListener('pointerdown', (event) => {
+            isPointerMoved = false;
+            startX = event.clientX;
+            startY = event.clientY;
+        });
+
+        bigButton.addEventListener('pointermove', (event) => {
+            const deltaX = Math.abs(event.clientX - startX);
+            const deltaY = Math.abs(event.clientY - startY);
+            if (deltaX > 10000 || deltaY > 10000) {
+                isPointerMoved = true;
+            }
+        });
+
         bigButton.addEventListener('pointerup', (event) => {
             event.preventDefault();
-            handleButtonPress();
+            if (!isPointerMoved) {
+                handleButtonPress();
+            }
         });
 
         function handleButtonPress() {
@@ -161,3 +181,4 @@
     </script>
 </body>
 </html>
+``` 
