@@ -43,90 +43,62 @@
 <body>
     <button id="bigButton"></button>
     <div id="history"></div>
-
+    
     <script>
-        const abcount = 3;
         const bigButton = document.getElementById('bigButton');
         const body = document.body;
         const historyDiv = document.getElementById('history');
         const today = new Date().toISOString().split('T')[0];
-        const lastDate = localStorage.getItem('lastDate');
 
-        if (lastDate !== today && !localStorage.getItem('refreshHandled')) {
-            localStorage.setItem('refreshHandled', 'true');
-            location.reload();
-        } else {
-            localStorage.removeItem('refreshHandled');
-        }
-
-        let firstVisitDate = localStorage.getItem('firstVisitDate');
-        if (!firstVisitDate) {
-            firstVisitDate = today;
-            localStorage.setItem('firstVisitDate', firstVisitDate);
-        }
-
-        let count = parseInt(localStorage.getItem('count'));
-        const backgroundColor = localStorage.getItem('backgroundColor');
-        const buttonVisibility = localStorage.getItem('buttonVisibility');
+        let count = parseInt(localStorage.getItem('count')) || 0;
         let history = JSON.parse(localStorage.getItem('history')) || {};
         const redbac = '#442a2a';
         const greenbac = '#2a442c';
 
-        if (lastDate !== today || isNaN(count)) {
-            if (lastDate) {
-                history[lastDate] = abcount - count;
-                localStorage.setItem('history', JSON.stringify(history));
-            }
-            count = abcount;
-            localStorage.setItem('lastDate', today);
-            localStorage.setItem('count', count);
-            localStorage.setItem('backgroundColor', redbac);
-            localStorage.setItem('buttonVisibility', 'block');
-            body.style.backgroundColor = redbac;
-            bigButton.style.display = 'block';
-            bigButton.textContent = count;
-            historyDiv.style.display = 'none';
-        }
+        body.style.backgroundColor = redbac;
+        bigButton.style.display = 'block';
 
-        body.style.backgroundColor = backgroundColor || redbac;
-        bigButton.style.display = buttonVisibility || 'block';
-        bigButton.textContent = count;
+        let sessionPresses = 0;
+        const maxSessionPresses = 3;
+        bigButton.textContent = `${count} (presses today)`;
 
-        if (count === 0) {
-            historyDiv.style.display = 'block';
-            displayHistory();
-        }
-
+        historyDiv.style.display = 'none';
 
         bigButton.addEventListener('pointerdown', handleButtonPress);
 
         function handleButtonPress() {
-            if (count > 0) {
-                count--;
-                bigButton.textContent = count;
-                localStorage.setItem('count', count);
-                if (count === 0) {
-                    body.style.backgroundColor = greenbac;
-                    bigButton.style.display = 'none';
-                    history[today] = abcount;
-                    localStorage.setItem('history', JSON.stringify(history));
-                    localStorage.setItem('backgroundColor', greenbac);
-                    localStorage.setItem('buttonVisibility', 'none');
-                    historyDiv.style.display = 'block';
-                    displayHistory();
-                }
+            if (sessionPresses >= maxSessionPresses) {
+                bigButton.disabled = true;
+                bigButton.textContent = "Reload for more!";
+                return;
+            }
+            sessionPresses++;
+            count++;
+            bigButton.textContent = `${count} (presses today)`;
+            localStorage.setItem('count', count);
+
+            history[today] = count;
+            localStorage.setItem('history', JSON.stringify(history));
+
+            if (sessionPresses >= maxSessionPresses) {
+                bigButton.disabled = true;
+                bigButton.textContent = "Reload for more!";
+                body.style.backgroundColor = greenbac;
+                bigButton.style.display = 'none';
+                historyDiv.style.display = 'block';
+                displayHistory();
             }
         }
 
         function displayHistory() {
             let historyHTML = '';
             const sortedDates = Object.keys(history).sort((a, b) => new Date(b) - new Date(a));
-            const today = new Date();
+            const todayDate = new Date();
 
             sortedDates.forEach(date => {
                 const clicks = history[date] || 0;
                 const dateObj = new Date(date);
-                const diffInTime = today - dateObj;
+                const diffInTime = todayDate - dateObj;
                 const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24));
 
                 const dayLabel = diffInDays === 0
@@ -138,7 +110,7 @@
                 historyHTML += `
                     <div>
                         <span style="opacity: 0.45;">${dayLabel}</span><br>
-                        ${clicks}<br><br>
+                        ${clicks} presses<br><br>
                     </div>
                 `;
             });
@@ -146,17 +118,19 @@
             historyDiv.innerHTML = historyHTML;
         }
 
-        function getLast30Days() {
-            const dates = [];
-            const today = new Date();
-            for (let i = 0; i < 30; i++) {
-                const date = new Date(today);
-                date.setDate(today.getDate() - i);
-                dates.push(date.toISOString().split('T')[0]);
+        setInterval(() => {
+            const currentDate = new Date().toISOString().split('T')[0];
+            if (currentDate !== today) {
+                count = 0;
+                localStorage.setItem('count', count);
+                bigButton.textContent = `${count} (presses today)`;
+                history[currentDate] = count;
+                localStorage.setItem('history', JSON.stringify(history));
+                displayHistory();
+                sessionPresses = 0;
+                bigButton.disabled = false;
             }
-            return dates;
-        }
+        }, 60 * 1000);
     </script>
 </body>
 </html>
-``` 
