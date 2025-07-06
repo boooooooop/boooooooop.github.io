@@ -60,7 +60,7 @@
 
         let sessionPresses = 0;
         const maxSessionPresses = 3;
-        bigButton.textContent = `${count} (presses today)`;
+        bigButton.textContent = `${count}`;
 
         historyDiv.style.display = 'none';
 
@@ -69,12 +69,12 @@
         function handleButtonPress() {
             if (sessionPresses >= maxSessionPresses) {
                 bigButton.disabled = true;
-                bigButton.textContent = "Reload for more!";
+                bigButton.textContent = "";
                 return;
             }
             sessionPresses++;
             count++;
-            bigButton.textContent = `${count} (presses today)`;
+            bigButton.textContent = `${count}`;
             localStorage.setItem('count', count);
 
             history[today] = count;
@@ -82,7 +82,7 @@
 
             if (sessionPresses >= maxSessionPresses) {
                 bigButton.disabled = true;
-                bigButton.textContent = "Reload for more!";
+                bigButton.textContent = "";
                 body.style.backgroundColor = greenbac;
                 bigButton.style.display = 'none';
                 historyDiv.style.display = 'block';
@@ -110,7 +110,7 @@
                 historyHTML += `
                     <div>
                         <span style="opacity: 0.45;">${dayLabel}</span><br>
-                        ${clicks} presses<br><br>
+                        ${clicks}<br><br>
                     </div>
                 `;
             });
@@ -123,7 +123,7 @@
             if (currentDate !== today) {
                 count = 0;
                 localStorage.setItem('count', count);
-                bigButton.textContent = `${count} (presses today)`;
+                bigButton.textContent = `${count}`;
                 history[currentDate] = count;
                 localStorage.setItem('history', JSON.stringify(history));
                 displayHistory();
