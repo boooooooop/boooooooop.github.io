@@ -201,27 +201,9 @@
             localStorage.setItem('lastChallengeTime', Date.now());
         }
 
-        // On page load, check if 3 minutes have passed
-        const lastChallengeTime = getLastChallengeTime();
-        const now = Date.now();
-        const threeMinutes = 3 * 60 * 1000;
-
-        if (now - lastChallengeTime < threeMinutes) {
-            // Skip challenge screen, show main button or history
-            challengeContainer.style.display = 'none';
-            if (sessionPresses >= maxSessionPresses) {
-                bigButton.style.display = 'none';
-                historyDiv.style.display = 'block';
-                displayHistory();
-            } else {
-                bigButton.style.display = 'block';
-            }
-        } else {
-            // Show challenge screen
-            challengeContainer.style.display = 'flex';
-            bigButton.style.display = 'none';
-            historyDiv.style.display = 'none';
-        }
+        challengeContainer.style.display = 'flex';
+        bigButton.style.display = 'none';
+        historyDiv.style.display = 'none';
 
         acceptBtn.addEventListener('click', () => {
             setLastChallengeTime();
