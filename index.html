@@ -38,16 +38,120 @@
             overflow-y: auto;
             display: none;
         }
+        #challengeContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100vw;
+            gap: 2vw;
+        }
+        .challengeBtn {
+            flex: 1 1 40vw;
+            height: 60vw;
+            max-height: 40vh;
+            max-width: 45vw;
+            min-width: 120px;
+            min-height: 60px;
+            font-size: 2rem;
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            transition: transform 0.1s;
+        }
+        #acceptBtn.challengeBtn {
+            background-color: #222b22; /* much darker green */
+        }
+        #acceptBtn.challengeBtn:active {
+            background-color: #161b16;
+            transform: scale(0.98);
+        }
+        #declineBtn.challengeBtn {
+            background-color: #2b2222; /* much darker red */
+        }
+        #declineBtn.challengeBtn:active {
+            background-color: #1b1616;
+            transform: scale(0.98);
+        }
+        /* Hide native number input spinners */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            appearance: textfield;
+            -moz-appearance: textfield;
+        }
+        .custom-spinner {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.5vw;
+        }
+        .spinner-btn {
+            background: #2a394a;
+            color: rgb(190,187,187);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            width: 2.5vw;
+            min-width: 32px;
+            height: 2.5vw;
+            min-height: 32px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            transition: background 0.15s;
+        }
+        .spinner-btn:active {
+            background: #19232d99;
+        }
+        @media (max-width: 600px) {
+            #challengeContainer {
+                flex-direction: column;
+                gap: 6vw;
+                height: 100vh;
+            }
+            .challengeBtn {
+                width: 80vw;
+                height: 18vh;
+                font-size: 2.2rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <button id="bigButton"></button>
+    <div id="challengeContainer" style="flex-direction:column; gap:2vw;">
+        <div style="display:flex; flex-direction:row; gap:5vw; justify-content:center; align-items:center; width:100%;">
+            <button id="acceptBtn" class="challengeBtn"></button>
+            <button id="declineBtn" class="challengeBtn"></button>
+        </div>
+        <div style="margin-top:2vw; display:flex; flex-direction:column; align-items:center; width:100%;">
+            <label for="maxPressInput" style="color:#fff; font-size:1.1rem; margin-bottom:0.5vw; opacity:0.7;">Reps</label>
+            <div class="custom-spinner">
+                <button type="button" id="decrementBtn" class="spinner-btn">−</button>
+                <input id="maxPressInput" type="number" min="1" max="99" placeholder="Reps"
+                    style="font-size:1.2rem; width:18vw; max-width:120px; padding:0.5vw 1vw; border-radius:10px; border:none; text-align:center; background:#2a394a; color:rgb(190,187,187); box-shadow:0 2px 10px rgba(0,0,0,0.10);">
+                <button type="button" id="incrementBtn" class="spinner-btn">+</button>
+            </div>
+        </div>
+    </div>
+    <button id="bigButton" style="display: none;"></button>
     <div id="history"></div>
     
     <script>
+        const challengeContainer = document.getElementById('challengeContainer');
+        const acceptBtn = document.getElementById('acceptBtn');
+        const declineBtn = document.getElementById('declineBtn');
         const bigButton = document.getElementById('bigButton');
         const body = document.body;
         const historyDiv = document.getElementById('history');
+        const maxPressInput = document.getElementById('maxPressInput');
+        const incrementBtn = document.getElementById('incrementBtn');
+        const decrementBtn = document.getElementById('decrementBtn');
         const today = new Date().toISOString().split('T')[0];
 
         let count = parseInt(localStorage.getItem('count')) || 0;
@@ -56,13 +160,79 @@
         const greenbac = '#2a442c';
 
         body.style.backgroundColor = redbac;
-        bigButton.style.display = 'block';
+        bigButton.style.display = 'none';
+        historyDiv.style.display = 'none';
 
         let sessionPresses = 0;
-        const maxSessionPresses = 3;
+        let maxSessionPresses = parseInt(localStorage.getItem('maxSessionPresses')) || 3;
+        maxPressInput.value = maxSessionPresses;
         bigButton.textContent = `${count}`;
 
-        historyDiv.style.display = 'none';
+        incrementBtn.addEventListener('click', () => {
+            let val = parseInt(maxPressInput.value) || 1;
+            if (val < 99) val++;
+            maxPressInput.value = val;
+            maxSessionPresses = val;
+            localStorage.setItem('maxSessionPresses', maxSessionPresses);
+        });
+
+        decrementBtn.addEventListener('click', () => {
+            let val = parseInt(maxPressInput.value) || 1;
+            if (val > 1) val--;
+            maxPressInput.value = val;
+            maxSessionPresses = val;
+            localStorage.setItem('maxSessionPresses', maxSessionPresses);
+        });
+
+        maxPressInput.addEventListener('change', () => {
+            let val = parseInt(maxPressInput.value);
+            if (isNaN(val) || val < 1) val = 1;
+            if (val > 99) val = 99;
+            maxSessionPresses = val;
+            localStorage.setItem('maxSessionPresses', maxSessionPresses);
+            maxPressInput.value = maxSessionPresses;
+        });
+
+        // Helper to get/set last challenge/accept time
+        function getLastChallengeTime() {
+            return parseInt(localStorage.getItem('lastChallengeTime')) || 0;
+        }
+        function setLastChallengeTime() {
+            localStorage.setItem('lastChallengeTime', Date.now());
+        }
+
+        // On page load, check if 3 minutes have passed
+        const lastChallengeTime = getLastChallengeTime();
+        const now = Date.now();
+        const threeMinutes = 3 * 60 * 1000;
+
+        if (now - lastChallengeTime < threeMinutes) {
+            // Skip challenge screen, show main button or history
+            challengeContainer.style.display = 'none';
+            if (sessionPresses >= maxSessionPresses) {
+                bigButton.style.display = 'none';
+                historyDiv.style.display = 'block';
+                displayHistory();
+            } else {
+                bigButton.style.display = 'block';
+            }
+        } else {
+            // Show challenge screen
+            challengeContainer.style.display = 'flex';
+            bigButton.style.display = 'none';
+            historyDiv.style.display = 'none';
+        }
+
+        acceptBtn.addEventListener('click', () => {
+            setLastChallengeTime();
+            challengeContainer.style.display = 'none';
+            bigButton.style.display = 'block';
+        });
+
+        declineBtn.addEventListener('click', () => {
+            window.close();
+            window.location.href = 'about:blank';
+        });
 
         bigButton.addEventListener('pointerdown', handleButtonPress);
 
@@ -81,6 +251,7 @@
             localStorage.setItem('history', JSON.stringify(history));
 
             if (sessionPresses >= maxSessionPresses) {
+                setLastChallengeTime(); // Save completion time
                 bigButton.disabled = true;
                 bigButton.textContent = "";
                 body.style.backgroundColor = greenbac;
