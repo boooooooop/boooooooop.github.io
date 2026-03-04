@@ -1,289 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #2a442c;
-            font-family: Arial, sans-serif;
-        }
-        #bigButton {
-            width: 80%;
-            height: 80%;
-            background-color: #2a394a;
-            color: rgb(190, 187, 187);
-            font-size: 2rem;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: center;
-        }
-        #bigButton:active {
-            background-color: #19232d99;
-        }
-        #history {
-            margin-top: 80px;
-            font-size: 1rem;
-            text-align: center;
-            max-width: 90%;
-            overflow-y: auto;
-            display: none;
-        }
-        #challengeContainer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            width: 100vw;
-            gap: 2vw;
-        }
-        .challengeBtn {
-            flex: 1 1 40vw;
-            height: 60vw;
-            max-height: 40vh;
-            max-width: 45vw;
-            min-width: 120px;
-            min-height: 60px;
-            font-size: 2rem;
-            border: none;
-            border-radius: 20px;
-            color: #fff;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-            transition: transform 0.1s;
-        }
-        #acceptBtn.challengeBtn {
-            background-color: #222b22; /* much darker green */
-        }
-        #acceptBtn.challengeBtn:active {
-            background-color: #161b16;
-            transform: scale(0.98);
-        }
-        #declineBtn.challengeBtn {
-            background-color: #2b2222; /* much darker red */
-        }
-        #declineBtn.challengeBtn:active {
-            background-color: #1b1616;
-            transform: scale(0.98);
-        }
-        /* Hide native number input spinners */
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] {
-            appearance: textfield;
-            -moz-appearance: textfield;
-        }
-        .custom-spinner {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 0.5vw;
-        }
-        .spinner-btn {
-            background: #2a394a;
-            color: rgb(190,187,187);
-            border: none;
-            border-radius: 8px;
-            font-size: 1.3rem;
-            width: 2.5vw;
-            min-width: 32px;
-            height: 2.5vw;
-            min-height: 32px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-            transition: background 0.15s;
-        }
-        .spinner-btn:active {
-            background: #19232d99;
-        }
-        @media (max-width: 600px) {
-            #challengeContainer {
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                display: flex;
                 flex-direction: column;
-                gap: 6vw;
+                justify-content: center;
+                align-items: center;
                 height: 100vh;
+                background-color: #2a442c;
+                font-family: Arial, sans-serif;
+            }
+            #bigButton {
+                width: 80%;
+                height: 80%;
+                background-color: #2a394a;
+                color: rgb(190, 187, 187);
+                font-size: 2rem;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+                text-align: center;
+            }
+            #bigButton:active {
+                background-color: #19232d99;
+            }
+            #history {
+                margin-top: 80px;
+                font-size: 1rem;
+                text-align: center;
+                max-width: 90%;
+                overflow-y: auto;
+                display: none;
+            }
+            #challengeContainer {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                width: 100vw;
+                gap: 2vw;
             }
             .challengeBtn {
-                width: 80vw;
-                height: 18vh;
-                font-size: 2.2rem;
+                flex: 1 1 40vw;
+                height: 60vw;
+                max-height: 40vh;
+                max-width: 45vw;
+                min-width: 120px;
+                min-height: 60px;
+                font-size: 2rem;
+                border: none;
+                border-radius: 20px;
+                color: #fff;
+                cursor: pointer;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+                transition: transform 0.1s;
             }
-        }
-    </style>
-</head>
-<body>
-    <div id="challengeContainer" style="flex-direction:column; gap:2vw;">
-        <div style="display:flex; flex-direction:row; gap:5vw; justify-content:center; align-items:center; width:100%;">
-            <button id="acceptBtn" class="challengeBtn"></button>
-            <button id="declineBtn" class="challengeBtn"></button>
+            .landingLink {
+                color: #6f8386;
+                font-size: 2rem;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+            #acceptBtn.challengeBtn {
+                background-color: #222b22;
+            }
+            #acceptBtn.challengeBtn:active {
+                background-color: #161b16;
+                transform: scale(0.98);
+            }
+            #declineBtn.challengeBtn {
+                background-color: #2b2222;
+            }
+            #declineBtn.challengeBtn:active {
+                background-color: #1b1616;
+                transform: scale(0.98);
+            }
+            input[type=number]::-webkit-inner-spin-button, 
+            input[type=number]::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            input[type=number] {
+                appearance: textfield;
+                -moz-appearance: textfield;
+            }
+            .custom-spinner {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5vw;
+            }
+            .spinner-btn {
+                background: #2a394a;
+                color: rgb(190,187,187);
+                border: none;
+                border-radius: 8px;
+                font-size: 1.3rem;
+                width: 2.5vw;
+                min-width: 32px;
+                height: 2.5vw;
+                min-height: 32px;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+                transition: background 0.15s;
+            }
+            .spinner-btn:active {
+                background: #19232d99;
+            }
+            @media (max-width: 600px) {
+                #challengeContainer {
+                    flex-direction: column;
+                    gap: 6vw;
+                    height: 100vh;
+                }
+                .challengeBtn {
+                    width: 80vw;
+                    height: 18vh;
+                    font-size: 2.2rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- landing page -->
+        <div id="landing" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; width:100vw; gap:4vw; background-color: rgb(52, 62, 62);">
+            <a id="launchChallenge" class="landingLink" href="javascript:void(0);">challang</a>
+            <a id="launchRandomTv" class="landingLink" href="javascript:void(0);">randomtv</a>
         </div>
-        <div style="margin-top:2vw; display:flex; flex-direction:column; align-items:center; width:100%;">
-            <label for="maxPressInput" style="color:#fff; font-size:1.1rem; margin-bottom:0.5vw; opacity:0.7;">Reps</label>
-            <div class="custom-spinner">
-                <button type="button" id="decrementBtn" class="spinner-btn">−</button>
-                <input id="maxPressInput" type="number" min="1" max="99" placeholder="Reps"
-                    style="font-size:1.2rem; width:18vw; max-width:120px; padding:0.5vw 1vw; border-radius:10px; border:none; text-align:center; background:#2a394a; color:rgb(190,187,187); box-shadow:0 2px 10px rgba(0,0,0,0.10);">
-                <button type="button" id="incrementBtn" class="spinner-btn">+</button>
+
+        <!-- challenge container (initially hidden) -->
+        <div id="challengeContainer" style="flex-direction:column; gap:2vw; display:none;">
+            <div style="display:flex; flex-direction:row; gap:5vw; justify-content:center; align-items:center; width:100%;">
+                <button id="acceptBtn" class="challengeBtn"></button>
+                <button id="declineBtn" class="challengeBtn"></button>
+            </div>
+            <div style="margin-top:2vw; display:flex; flex-direction:column; align-items:center; width:100%;">
+                <label for="maxPressInput" style="color:#fff; font-size:1.1rem; margin-bottom:0.5vw; opacity:0.7;">Reps</label>
+                <div class="custom-spinner">
+                    <button type="button" id="decrementBtn" class="spinner-btn">−</button>
+                    <input id="maxPressInput" type="number" min="1" max="99" placeholder="Reps"
+                        style="font-size:1.2rem; width:18vw; max-width:120px; padding:0.5vw 1vw; border-radius:10px; border:none; text-align:center; background:#2a394a; color:rgb(190,187,187); box-shadow:0 2px 10px rgba(0,0,0,0.10);">
+                    <button type="button" id="incrementBtn" class="spinner-btn">+</button>
+                </div>
             </div>
         </div>
-    </div>
-    <button id="bigButton" style="display: none;"></button>
-    <div id="history"></div>
-    
-    <script>
-        const challengeContainer = document.getElementById('challengeContainer');
-        const acceptBtn = document.getElementById('acceptBtn');
-        const declineBtn = document.getElementById('declineBtn');
-        const bigButton = document.getElementById('bigButton');
-        const body = document.body;
-        const historyDiv = document.getElementById('history');
-        const maxPressInput = document.getElementById('maxPressInput');
-        const incrementBtn = document.getElementById('incrementBtn');
-        const decrementBtn = document.getElementById('decrementBtn');
-        const today = new Date().toISOString().split('T')[0];
+        <button id="bigButton" style="display: none;"></button>
+        <div id="history"></div>
+        
+        <script>
+            const landing = document.getElementById('landing');
+            const launchChallenge = document.getElementById('launchChallenge');
+            const launchRandomTv = document.getElementById('launchRandomTv');
+            const challengeContainer = document.getElementById('challengeContainer');
+            const acceptBtn = document.getElementById('acceptBtn');
+            const declineBtn = document.getElementById('declineBtn');
+            const bigButton = document.getElementById('bigButton');
+            const body = document.body;
+            const historyDiv = document.getElementById('history');
+            const maxPressInput = document.getElementById('maxPressInput');
+            const incrementBtn = document.getElementById('incrementBtn');
+            const decrementBtn = document.getElementById('decrementBtn');
+            const today = new Date().toISOString().split('T')[0];
 
-        let count = parseInt(localStorage.getItem('count')) || 0;
-        let history = JSON.parse(localStorage.getItem('history')) || {};
-        const redbac = '#442a2a';
-        const greenbac = '#2a442c';
+            let count = parseInt(localStorage.getItem('count')) || 0;
+            let history = JSON.parse(localStorage.getItem('history')) || {};
+            const redbac = '#442a2a';
+            const greenbac = '#2a442c';
 
-        body.style.backgroundColor = redbac;
-        bigButton.style.display = 'none';
-        historyDiv.style.display = 'none';
+            body.style.backgroundColor = redbac;
+            bigButton.style.display = 'none';
+            historyDiv.style.display = 'none';
 
-        let sessionPresses = 0;
-        let maxSessionPresses = parseInt(localStorage.getItem('maxSessionPresses')) || 3;
-        maxPressInput.value = maxSessionPresses;
-        bigButton.textContent = `${count}`;
-
-        incrementBtn.addEventListener('click', () => {
-            let val = parseInt(maxPressInput.value) || 1;
-            if (val < 99) val++;
-            maxPressInput.value = val;
-            maxSessionPresses = val;
-            localStorage.setItem('maxSessionPresses', maxSessionPresses);
-        });
-
-        decrementBtn.addEventListener('click', () => {
-            let val = parseInt(maxPressInput.value) || 1;
-            if (val > 1) val--;
-            maxPressInput.value = val;
-            maxSessionPresses = val;
-            localStorage.setItem('maxSessionPresses', maxSessionPresses);
-        });
-
-        maxPressInput.addEventListener('change', () => {
-            let val = parseInt(maxPressInput.value);
-            if (isNaN(val) || val < 1) val = 1;
-            if (val > 99) val = 99;
-            maxSessionPresses = val;
-            localStorage.setItem('maxSessionPresses', maxSessionPresses);
+            let sessionPresses = 0;
+            let maxSessionPresses = parseInt(localStorage.getItem('maxSessionPresses')) || 3;
             maxPressInput.value = maxSessionPresses;
-        });
-
-        // Helper to get/set last challenge/accept time
-        function getLastChallengeTime() {
-            return parseInt(localStorage.getItem('lastChallengeTime')) || 0;
-        }
-        function setLastChallengeTime() {
-            localStorage.setItem('lastChallengeTime', Date.now());
-        }
-
-        challengeContainer.style.display = 'flex';
-        bigButton.style.display = 'none';
-        historyDiv.style.display = 'none';
-
-        acceptBtn.addEventListener('click', () => {
-            setLastChallengeTime();
-            challengeContainer.style.display = 'none';
-            bigButton.style.display = 'block';
-        });
-
-        declineBtn.addEventListener('click', () => {
-            window.close();
-            window.location.href = 'about:blank';
-        });
-
-        bigButton.addEventListener('pointerdown', handleButtonPress);
-
-        function handleButtonPress() {
-            if (sessionPresses >= maxSessionPresses) {
-                bigButton.disabled = true;
-                bigButton.textContent = "";
-                return;
-            }
-            sessionPresses++;
-            count++;
             bigButton.textContent = `${count}`;
-            localStorage.setItem('count', count);
 
-            history[today] = count;
-            localStorage.setItem('history', JSON.stringify(history));
-
-            if (sessionPresses >= maxSessionPresses) {
-                setLastChallengeTime(); // Save completion time
-                bigButton.disabled = true;
-                bigButton.textContent = "";
-                body.style.backgroundColor = greenbac;
-                bigButton.style.display = 'none';
-                historyDiv.style.display = 'block';
-                displayHistory();
-            }
-        }
-
-        function displayHistory() {
-            let historyHTML = '';
-            const sortedDates = Object.keys(history).sort((a, b) => new Date(b) - new Date(a));
-            const todayDate = new Date();
-
-            sortedDates.forEach(date => {
-                const clicks = history[date] || 0;
-                const dateObj = new Date(date);
-                const diffInTime = todayDate - dateObj;
-                const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24));
-
-                const dayLabel = diffInDays === 0
-                    ? 'today'
-                    : diffInDays === 1
-                    ? '1 day ago'
-                    : `${diffInDays} days ago`;
-
-                historyHTML += `
-                    <div>
-                        <span style="opacity: 0.45;">${dayLabel}</span><br>
-                        ${clicks}<br><br>
-                    </div>
-                `;
+            // landing interaction
+            launchChallenge.addEventListener('click', (e) => {
+                e.preventDefault();
+                landing.style.display = 'none';
+                challengeContainer.style.display = 'flex';
             });
 
-            historyDiv.innerHTML = historyHTML;
-        }
+            launchRandomTv.addEventListener('click', (e) => {
+                e.preventDefault();
+                randomEpisode();
+            });
 
-        setInterval(() => {
-            const currentDate = new Date().toISOString().split('T')[0];
-            if (currentDate !== today) {
-                count = 0;
-                localStorage.setItem('count', count);
-                bigButton.textContent = `${count}`;
-                history[currentDate] = count;
-                localStorage.setItem('history', JSON.stringify(history));
-                displayHistory();
-                sessionPresses = 0;
-                bigButton.disabled = false;
+            incrementBtn.addEventListener('click', () => {
+                let val = parseInt(maxPressInput.value) || 1;
+                if (val < 99) val++;
+                maxPressInput.value = val;
+                maxSessionPresses = val;
+                localStorage.setItem('maxSessionPresses', maxSessionPresses);
+            });
+
+            decrementBtn.addEventListener('click', () => {
+                let val = parseInt(maxPressInput.value) || 1;
+                if (val > 1) val--;
+                maxPressInput.value = val;
+                maxSessionPresses = val;
+                localStorage.setItem('maxSessionPresses', maxSessionPresses);
+            });
+
+            maxPressInput.addEventListener('change', () => {
+                let val = parseInt(maxPressInput.value);
+                if (isNaN(val) || val < 1) val = 1;
+                if (val > 99) val = 99;
+                maxSessionPresses = val;
+                localStorage.setItem('maxSessionPresses', maxSessionPresses);
+                maxPressInput.value = maxSessionPresses;
+            });
+
+            function getLastChallengeTime() {
+                return parseInt(localStorage.getItem('lastChallengeTime')) || 0;
             }
-        }, 60 * 1000);
-    </script>
-</body>
+            function setLastChallengeTime() {
+                localStorage.setItem('lastChallengeTime', Date.now());
+            }
+
+            // challengeContainer visibility controlled by landing button
+            challengeContainer.style.display = 'none';
+
+            acceptBtn.addEventListener('click', () => {
+                setLastChallengeTime();
+                challengeContainer.style.display = 'none';
+                bigButton.style.display = 'block';
+            });
+
+            declineBtn.addEventListener('click', () => {
+                window.close();
+                window.location.href = 'about:blank';
+            });
+
+            bigButton.addEventListener('pointerdown', handleButtonPress);
+
+            function handleButtonPress() {
+                if (sessionPresses >= maxSessionPresses) {
+                    bigButton.disabled = true;
+                    bigButton.textContent = "";
+                    return;
+                }
+                sessionPresses++;
+                count++;
+                bigButton.textContent = `${count}`;
+                localStorage.setItem('count', count);
+
+                history[today] = count;
+                localStorage.setItem('history', JSON.stringify(history));
+
+                if (sessionPresses >= maxSessionPresses) {
+                    setLastChallengeTime();
+                    bigButton.disabled = true;
+                    bigButton.textContent = "";
+                    body.style.backgroundColor = greenbac;
+                    bigButton.style.display = 'none';
+                    historyDiv.style.display = 'block';
+                    displayHistory();
+                }
+            }
+
+            function displayHistory() {
+                let historyHTML = '';
+                const sortedDates = Object.keys(history).sort((a, b) => new Date(b) - new Date(a));
+                const todayDate = new Date();
+
+                sortedDates.forEach(date => {
+                    const clicks = history[date] || 0;
+                    const dateObj = new Date(date);
+                    const diffInTime = todayDate - dateObj;
+                    const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24));
+
+                    const dayLabel = diffInDays === 0
+                        ? 'today'
+                        : diffInDays === 1
+                        ? '1 day ago'
+                        : `${diffInDays} days ago`;
+
+                    historyHTML += `
+                        <div>
+                            <span style="opacity: 0.45;">${dayLabel}</span><br>
+                            ${clicks}<br><br>
+                        </div>
+                    `;
+                });
+
+                historyDiv.innerHTML = historyHTML;
+            }
+
+            setInterval(() => {
+                const currentDate = new Date().toISOString().split('T')[0];
+                if (currentDate !== today) {
+                    count = 0;
+                    localStorage.setItem('count', count);
+                    bigButton.textContent = `${count}`;
+                    history[currentDate] = count;
+                    localStorage.setItem('history', JSON.stringify(history));
+                    displayHistory();
+                    sessionPresses = 0;
+                    bigButton.disabled = false;
+                }
+            }, 60 * 1000);
+        </script>
+        <script>
+            const shows = [
+                { name: "Brooklyn Nine-Nine", id: 48891, slug: "brooklyn-nine-nine", episodes: [22, 23, 23, 22, 22, 18, 13, 10] },
+                { name: "Community", id: 18347, slug: "community", episodes: [25, 24, 22, 13, 13, 13] },
+                { name: "The Office", id: 2316, slug: "the-office", episodes: [6, 22, 23, 14, 26, 26, 24, 24, 22] },
+                { name: "Parks and Recreation", id: 8592, slug: "parks-and-recreation", episodes: [6, 24, 16, 22, 22, 22, 22] },
+                { name: "The Good Place", id: 66573, slug: "the-good-place", episodes: [13, 12, 12, 13] },
+                { name: "How I Met Your Mother", id: 1100, slug: "how-i-met-your-mother", episodes: [22, 22, 20, 24, 24, 24, 24, 24, 24] },
+                { name: "Modern Family", id: 1421, slug: "modern-family", episodes: [24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 18] },
+                { name: "Seinfeld", id: 1400, slug: "seinfeld", episodes: [5, 12, 23, 24, 22, 24, 24, 24, 24] },
+                { name: "It's Always Sunny in Philadelphia", id: 2710, slug: "its-always-sunny-in-philadelphia", episodes: [7, 10, 15, 13, 12, 14, 13, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10] }
+            ];
+
+            function randomEpisode() {
+                const show = shows[Math.floor(Math.random() * shows.length)];
+                const seasonIndex = Math.floor(Math.random() * show.episodes.length);
+                const season = seasonIndex + 1;
+                const episode = Math.floor(Math.random() * show.episodes[seasonIndex]) + 1;
+                const url = `https://www.1shows.nl/tv/${show.id}-${show.slug}?streaming=true&season=${season}&episode=${episode}`;
+                window.location.href = url;
+            }
+        </script>
+    </body>
 </html>
