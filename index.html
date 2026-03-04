@@ -62,12 +62,6 @@
                 box-shadow: 0 2px 10px rgba(0,0,0,0.15);
                 transition: transform 0.1s;
             }
-            .landingLink {
-                color: #6f8386;
-                font-size: 2rem;
-                text-decoration: underline;
-                cursor: pointer;
-            }
             #acceptBtn.challengeBtn {
                 background-color: #222b22;
             }
@@ -129,14 +123,7 @@
         </style>
     </head>
     <body>
-        <!-- landing page -->
-        <div id="landing" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; width:100vw; gap:4vw; background-color: rgb(52, 62, 62);">
-            <a id="launchChallenge" class="landingLink" href="javascript:void(0);">challang</a>
-            <a id="launchRandomTv" class="landingLink" href="javascript:void(0);">randomtv</a>
-        </div>
-
-        <!-- challenge container (initially hidden) -->
-        <div id="challengeContainer" style="flex-direction:column; gap:2vw; display:none;">
+        <div id="challengeContainer" style="flex-direction:column; gap:2vw;">
             <div style="display:flex; flex-direction:row; gap:5vw; justify-content:center; align-items:center; width:100%;">
                 <button id="acceptBtn" class="challengeBtn"></button>
                 <button id="declineBtn" class="challengeBtn"></button>
@@ -150,14 +137,14 @@
                     <button type="button" id="incrementBtn" class="spinner-btn">+</button>
                 </div>
             </div>
+            <div style="margin-top: 8vw;">
+                <a href="#" onClick="randomEpisode(); return false;" style="color: #4d585b; font-size: 1.5rem; text-decoration: none; cursor: pointer;">randomtv</a>
+            </div>
         </div>
         <button id="bigButton" style="display: none;"></button>
         <div id="history"></div>
         
         <script>
-            const landing = document.getElementById('landing');
-            const launchChallenge = document.getElementById('launchChallenge');
-            const launchRandomTv = document.getElementById('launchRandomTv');
             const challengeContainer = document.getElementById('challengeContainer');
             const acceptBtn = document.getElementById('acceptBtn');
             const declineBtn = document.getElementById('declineBtn');
@@ -182,18 +169,6 @@
             let maxSessionPresses = parseInt(localStorage.getItem('maxSessionPresses')) || 3;
             maxPressInput.value = maxSessionPresses;
             bigButton.textContent = `${count}`;
-
-            // landing interaction
-            launchChallenge.addEventListener('click', (e) => {
-                e.preventDefault();
-                landing.style.display = 'none';
-                challengeContainer.style.display = 'flex';
-            });
-
-            launchRandomTv.addEventListener('click', (e) => {
-                e.preventDefault();
-                randomEpisode();
-            });
 
             incrementBtn.addEventListener('click', () => {
                 let val = parseInt(maxPressInput.value) || 1;
@@ -227,8 +202,9 @@
                 localStorage.setItem('lastChallengeTime', Date.now());
             }
 
-            // challengeContainer visibility controlled by landing button
-            challengeContainer.style.display = 'none';
+            challengeContainer.style.display = 'flex';
+            bigButton.style.display = 'none';
+            historyDiv.style.display = 'none';
 
             acceptBtn.addEventListener('click', () => {
                 setLastChallengeTime();
