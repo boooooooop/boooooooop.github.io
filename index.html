@@ -315,7 +315,7 @@
                 const seasonIndex = Math.floor(Math.random() * tvshow.episodes.length);
                 const season = seasonIndex + 1;
                 const episode = Math.floor(Math.random() * tvshow.episodes[seasonIndex]) + 1;
-                const url = `https://www.1shows.nl/tv/${tvshow.id}-${tvshow.slug}?streaming=true&season=${season}&episode=${episode}`;
+                const url = `https://www.1shows.org/tv/${tvshow.id}-${tvshow.slug}?streaming=true&season=${season}&episode=${episode}`;
                 window.location.href = url;
             }
 
@@ -366,7 +366,7 @@
                 const seasonIndex = Math.floor(Math.random() * alltvshow.episodes.length);
                 const season = seasonIndex + 1;
                 const episode = Math.floor(Math.random() * alltvshow.episodes[seasonIndex]) + 1;
-                const url = `https://www.1shows.nl/tv/${alltvshow.id}-${alltvshow.slug}?streaming=true&season=${season}&episode=${episode}`;
+                const url = `https://www.1shows.org/tv/${alltvshow.id}-${alltvshow.slug}?streaming=true&season=${season}&episode=${episode}`;
                 window.location.href = url;
             }
 
@@ -383,7 +383,7 @@
 
             function randommovie() {
                 const movieid = Math.floor(Math.random() * 999999) + 1;
-                const url = `https://www.1shows.nl/movies/${movieid}?streaming=true`;
+                const url = `https://www.1shows.org/movies/${movieid}?streaming=true`;
                 window.location.href = url;
             }
         </script>
